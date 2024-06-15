@@ -36,7 +36,7 @@ disp(Hz);
 [numz, denz] = tfdata(Hz, 'v');
 %% Parte experimental
 
-data_csv = csvread('v2TPFrcrcDatos_005_200Hz.csv');
+data_csv = csvread('TPFrcrcDatos_001.csv');
 
 u= data_csv(:,1);
 y= data_csv(:,2);
@@ -82,16 +82,4 @@ plot(t, y, 'LineWidth', 3)
 % plot(t, y_LS_2, '--', 'LineWidth', 3)
 % legend('u', 'y', 'y_LS_1', 'y_LS_2')
 
-##numz_sys=numz_LS_2(2:3);
-##denz_sys=denz_LS_2;
 
-
-numz_sys=[3.5584e-02,  3.3715e-03,  -1.9872e-03];
-denz_sys=[1.0000,  -0.6533,  -0.3087];
-
- y2 = filter(numz_sys, denz_sys, u);
-
-figure(2);
-
-plot(t, u, 'LineWidth', 3)
-plot(t, y2, 'LineWidth', 3)

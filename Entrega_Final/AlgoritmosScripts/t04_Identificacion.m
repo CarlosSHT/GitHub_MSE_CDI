@@ -2,28 +2,12 @@ clc, close all, clear all;
 %% Valores teóricos
 % Valores de componentes
 
-pkg load signal
-pkg load control
-
-%%
-function [Theta] = identificacionLS(n, u, y)
-  Y = y(n+1:length(y));
-  Phi = [];
-  for i=n:-1:1
-    Phi = [Phi y(i:(length(y)+i-n-1))];
-  end
-  for j=(n+1):-1:1
-    Phi = [Phi u(j:(length(y)+j-n-1))];
-  end
-  Theta = (Phi'*Phi)^(-1)*Phi'*Y;
-end
-
 R1 = 10*1e3;
 C1 = 1*1e-6;
 R2 = 39*1e3;
 C2 = 1*1e-6;
 
-fs = 200; % frecuencia de muestreo
+fs = 50; % frecuencia de muestreo
 h = 1/fs;
 
 num = [ 1 ];
@@ -32,11 +16,10 @@ den = [(R1*C1*R2*C2) (R1*C1+R1*C2+R2*C2) 1];
 Hs= tf(num, den)
 
 Hz = c2d(Hs, h, 'zoh')
-disp(Hz);
 [numz, denz] = tfdata(Hz, 'v');
 %% Parte experimental
 
-data_csv = csvread('TPFrcrcDatos_001.csv');
+data_csv = csvread('TPFrcrcDatos_005.csv');
 
 u= data_csv(:,1);
 y= data_csv(:,2);
@@ -82,4 +65,15 @@ plot(t, y, 'LineWidth', 3)
 % plot(t, y_LS_2, '--', 'LineWidth', 3)
 % legend('u', 'y', 'y_LS_1', 'y_LS_2')
 
-
+%%
+function [Theta] = identificacionLS(n, u, y)
+  Y = y(n+1:length(y));
+  Phi = [];
+  for i=n:-1:1
+    Phi = [Phi y(i:(length(y)+i-n-1))];
+  end
+  for j=(n+1):-1:1
+    Phi = [Phi u(j:(length(y)+j-n-1))];
+  end
+  Theta = (Phi'*Phi)^(-1)*Phi'*Y;
+end

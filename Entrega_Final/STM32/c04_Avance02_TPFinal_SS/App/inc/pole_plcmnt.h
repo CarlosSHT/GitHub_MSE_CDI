@@ -1,8 +1,8 @@
 /******************************************************************************
 * Title                 :   ------
-* Filename              :   app.h
+* Filename              :   pole_plcmnt.h
 * Author                :   Carlos Herrera Trujillo
-* Origin Date           :   Jun 8, 2024
+* Origin Date           :   Jun 14, 2024
 * Version               :   x.0.0
 * Compiler              :   ------
 * Target                :   STM32XXX
@@ -13,8 +13,8 @@
 /******************************************************************************
 * Define to Prevent Recursive Inclusion
 *******************************************************************************/
-#ifndef INC_APP_H_
-#define INC_APP_H_
+#ifndef INC_POLE_PLCMNT_H_
+#define INC_POLE_PLCMNT_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -24,27 +24,33 @@ extern "C" {
 /******************************************************************************
 * Private Preprocessor Constants
 *******************************************************************************/
-#include "udp_client.h"
+
 
 /******************************************************************************
 * Private Includes
 *******************************************************************************/
-
+#include "matrix_ops.h"
+#include <stdint.h>
 
 /******************************************************************************
 * Public defines
 *******************************************************************************/
-#define DEST_IP_ADDR0   192
-#define DEST_IP_ADDR1   168
-#define DEST_IP_ADDR2   5
-#define DEST_IP_ADDR3   229
 
-#define DEST_PORT    61454
 
 /******************************************************************************
 * Exported Typedefs
 *******************************************************************************/
 
+
+typedef struct {
+	float_matrix Ad;
+	float_matrix Bd;
+	float_matrix Cd;
+	float_matrix K;
+	float_matrix K1_a;
+	float K1_b;
+	float Ko;
+} pplc_config_t;
 
 /******************************************************************************
 * Exported constants
@@ -59,15 +65,19 @@ extern "C" {
 /******************************************************************************
 * Exported functions prototypes
 *******************************************************************************/
+void pole_placement_init(pplc_config_t *config, float_matrix Az, float_matrix Bz, float_matrix Cz, float_matrix K, float_matrix K1_a, float K1_b, float K0);
+float pole_placement_control(pplc_config_t config, float_matrix x_lcg, float reference);
 
-void app_Init(void);
-void app_fsm(void);
+float pole_placement_xi_I(pplc_config_t config, float_matrix x_lci, float r_i, float x_i);
+float pole_placement_control_I(pplc_config_t config, float_matrix x_lcg, float r_i, float x_i);
+
+
 
 /*******************************************************************************/
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* INC_APP_H_ */
+#endif /* INC_POLE_PLCMNT_H_ */
 
 /*** End of File **************************************************************/

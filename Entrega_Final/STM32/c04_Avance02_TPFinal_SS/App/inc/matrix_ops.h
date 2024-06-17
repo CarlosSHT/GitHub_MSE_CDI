@@ -1,8 +1,8 @@
 /******************************************************************************
 * Title                 :   ------
-* Filename              :   app.h
+* Filename              :   matrix_ops.h
 * Author                :   Carlos Herrera Trujillo
-* Origin Date           :   Jun 8, 2024
+* Origin Date           :   Jun 16, 2024
 * Version               :   x.0.0
 * Compiler              :   ------
 * Target                :   STM32XXX
@@ -13,8 +13,8 @@
 /******************************************************************************
 * Define to Prevent Recursive Inclusion
 *******************************************************************************/
-#ifndef INC_APP_H_
-#define INC_APP_H_
+#ifndef INC_MATRIX_OPS_H_
+#define INC_MATRIX_OPS_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -24,27 +24,33 @@ extern "C" {
 /******************************************************************************
 * Private Preprocessor Constants
 *******************************************************************************/
-#include "udp_client.h"
+
 
 /******************************************************************************
 * Private Includes
 *******************************************************************************/
-
+#include <stdint.h>
 
 /******************************************************************************
 * Public defines
 *******************************************************************************/
-#define DEST_IP_ADDR0   192
-#define DEST_IP_ADDR1   168
-#define DEST_IP_ADDR2   5
-#define DEST_IP_ADDR3   229
 
-#define DEST_PORT    61454
 
 /******************************************************************************
 * Exported Typedefs
 *******************************************************************************/
+typedef enum
+{
+	mtrx_Error = -1,
+	mtrx_Ok,
+}err_matrix;
 
+typedef struct _float_matrix
+{
+	float 		*mdir;
+	uint8_t		rows;
+	uint8_t		cols;
+}float_matrix;
 
 /******************************************************************************
 * Exported constants
@@ -60,14 +66,14 @@ extern "C" {
 * Exported functions prototypes
 *******************************************************************************/
 
-void app_Init(void);
-void app_fsm(void);
+err_matrix mult_float_matrix(float_matrix M1, float_matrix M2, float_matrix *P);
+
 
 /*******************************************************************************/
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* INC_APP_H_ */
+#endif /* INC_MATRIX_OPS_H_ */
 
 /*** End of File **************************************************************/

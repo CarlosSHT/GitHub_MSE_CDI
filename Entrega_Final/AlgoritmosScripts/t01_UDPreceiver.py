@@ -10,7 +10,7 @@ import csv
 import os
 import re
 
-dest_ip = '192.168.60.125'
+dest_ip = '192.168.5.229'
 dest_port = 61454
 
 fs_sys = 0 ## 200Hz fs
@@ -35,7 +35,7 @@ def next_file_number(folder_path, base_name="rcrcDatos_", extension=".csv"):
     next_number = max_number + 1
     return f"{base_name}{next_number:03d}{extension}"
 
-new_file_name = next_file_number(folder_path = ".", base_name= "v2TPFrcrcDatos_")
+new_file_name = next_file_number(folder_path = ".", base_name= "v3TPFrcrcDatos_")
 
 csv_file = new_file_name
 
@@ -61,7 +61,7 @@ adc2s, = plt.plot([], [], 'g-', linewidth=1, alpha=0.8, label="Output C1")
 adc3s, = plt.plot([], [], 'r-', linewidth=1, alpha=0.8, label="Output C2")
 adcLg = adcAxe.legend()
 adcAxe.grid(True)
-adcAxe.set_ylim(1100, 2600)
+# adcAxe.set_ylim(1100, 2600)
 adcAxe.set_ylim(0, 3.3)
 adcAxe.xaxis.grid(True, which='both', linestyle='--', linewidth=0.5, color='gray')
 adcAxe.yaxis.grid(True, which='both', linestyle='--', linewidth=0.5, color='gray')
@@ -78,7 +78,7 @@ paused = False
 
 
 def init_plot():
-    return adc1s,adc2s,adc3s,
+    return adc1s,adc2s,adc3s,adcAxe
 
 def update_plot(f):
     global data_udp, fs_sys, data_adcN, tData
@@ -87,7 +87,7 @@ def update_plot(f):
     cola_dataUDP_size = cola_data_udp.qsize()
     if cola_dataUDP_size >0 :
         data_udp = cola_data_udp.get()
-        print(len(data_udp))
+        
         header_data = data_udp[:header_size]
         unpacked_header = struct.unpack(struct_format, header_data)
 
@@ -109,7 +109,8 @@ def update_plot(f):
             for n in range (s):
                 data_adcX = np.zeros(fs_uc * tplo_secs, dtype=np.uint16)
                 data_adcN.append(data_adcX)
-                
+            adcAxe.set_xlim(0, (fs_sys * tplo_secs) / fs_sys)
+                    
                 
         adc_sX = []
         for nsig in range ((int)(len(data_signals)/(2*N))):
@@ -124,11 +125,10 @@ def update_plot(f):
 
             data_adcN[nsig] = np.concatenate((data_adcN[nsig], np.array(np.array(adc_sn), dtype=np.uint16)))
 
-        # with open(csv_file, mode='a', newline='') as file:
-        #     writer = csv.writer(file)
-        #     writer.writerows(np.array(adc_sX).transpose())
+        with open(csv_file, mode='a', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerows(np.array(adc_sX).transpose())
 
-        adcAxe.set_xlim(0, (fs_sys * tplo_secs) / fs_sys)
 
         adc1s.set_data(tData, data_adcN[0]*3.3/4095)
         adc2s.set_data(tData, data_adcN[1]*3.3/4095)
@@ -136,7 +136,7 @@ def update_plot(f):
 
 
 
-    return adc1s,adc2s,adc3s,
+    return adc1s, adc2s, adc3s, adcAxe
 
 def toggle_pause(event):
     global animation, paused

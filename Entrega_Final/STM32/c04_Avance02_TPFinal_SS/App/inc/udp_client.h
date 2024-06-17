@@ -1,6 +1,6 @@
 /******************************************************************************
 * Title                 :   ------
-* Filename              :   app.h
+* Filename              :   udp_client.h
 * Author                :   Carlos Herrera Trujillo
 * Origin Date           :   Jun 8, 2024
 * Version               :   x.0.0
@@ -13,8 +13,8 @@
 /******************************************************************************
 * Define to Prevent Recursive Inclusion
 *******************************************************************************/
-#ifndef INC_APP_H_
-#define INC_APP_H_
+#ifndef INC_UDP_CLIENT_H_
+#define INC_UDP_CLIENT_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -24,22 +24,17 @@ extern "C" {
 /******************************************************************************
 * Private Preprocessor Constants
 *******************************************************************************/
-#include "udp_client.h"
+
 
 /******************************************************************************
 * Private Includes
 *******************************************************************************/
-
+#include <stdint.h>
 
 /******************************************************************************
 * Public defines
 *******************************************************************************/
-#define DEST_IP_ADDR0   192
-#define DEST_IP_ADDR1   168
-#define DEST_IP_ADDR2   5
-#define DEST_IP_ADDR3   229
 
-#define DEST_PORT    61454
 
 /******************************************************************************
 * Exported Typedefs
@@ -60,14 +55,16 @@ extern "C" {
 * Exported functions prototypes
 *******************************************************************************/
 
-void app_Init(void);
-void app_fsm(void);
+void udpclient_Init(uint8_t ip0, uint8_t ip1, uint8_t ip2, uint8_t ip3, uint16_t port);
+
+void udpclient_client_send(char *data_msg, uint16_t datasize);
+
 
 /*******************************************************************************/
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* INC_APP_H_ */
+#endif /* INC_UDP_CLIENT_H_ */
 
 /*** End of File **************************************************************/
